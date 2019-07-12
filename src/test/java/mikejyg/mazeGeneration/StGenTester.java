@@ -1,6 +1,12 @@
 package mikejyg.mazeGeneration;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
+
+import org.junit.Test;
 
 /**
  * test the SpanningTreeGenerator
@@ -42,7 +48,7 @@ public class StGenTester {
 	
 	///////////////////////////////////////////////
 	
-	public void test() {
+	public void generateMaze() {
 		// construct a rectangular graph
 		
 		graph = new Graph<String, Node>();
@@ -95,55 +101,53 @@ public class StGenTester {
 		
 //		System.out.println(graph.toString());
 		
-		printMaze();
-		
 	}
 	
-	public void printMaze() {
+	public void printMaze(PrintStream printStream) {
 		for (int row=0; row<rows; row++) {
 			if (row==0) {
-				System.out.print("+");
+				printStream.print("+");
 				for (int col=0; col<cols; col++) {
-					System.out.print("-");
+					printStream.print("-");
 					
 					if (col==cols-1)
-						System.out.print("+");
+						printStream.print("+");
 					else
-						System.out.print("-");
+						printStream.print("-");
 				}
-				System.out.println();
+				printStream.println();
 			}
 			
-			System.out.print("|");
+			printStream.print("|");
 			for (int col=0; col<cols; col++) {
-				System.out.print("o");
+				printStream.print("o");
 				if (col<cols-1) {
 					if ( graph.isConnection(nodes[row][col], nodes[row][col+1]) ) {
-						System.out.print("|");
+						printStream.print("|");
 					} else {
-						System.out.print(" ");
+						printStream.print(" ");
 					}
 				}
 			}
-			System.out.println("|");
+			printStream.println("|");
 			
-			System.out.print("+");
+			printStream.print("+");
 			for (int col=0; col<cols; col++) {
 				if (row < rows-1) {
 					if ( graph.isConnection(nodes[row][col], nodes[row+1][col]) ) {
-						System.out.print("-+");
+						printStream.print("-+");
 					} else {
-						System.out.print(" +");
+						printStream.print(" +");
 					}
 				} else {
-					System.out.print("-");
+					printStream.print("-");
 					if (col==cols-1)
-						System.out.print("+");
+						printStream.print("+");
 					else
-						System.out.print("-");
+						printStream.print("-");
 				}
 			}
-			System.out.println();
+			printStream.println();
 			
 		}
 	}
@@ -166,15 +170,46 @@ public class StGenTester {
 		
 	}
 	
+	@Test
+	public void test() throws IOException {
+		random = new Random(1);
+
+		generateMaze();
+
+		try (var baos = new ByteArrayOutputStream();
+				var ps = new PrintStream(baos, true, StandardCharsets.UTF_8); ) {
+			printMaze(ps);
+			
+			var str = new String(baos.toByteArray(), StandardCharsets.UTF_8);
+			
+			System.out.println(str);
+			
+			assert( str.contentEquals( 
+					"+-----+" + System.lineSeparator() + 
+					"|o|o o|" + System.lineSeparator() + 
+					"+ +-+ +" + System.lineSeparator() + 
+					"|o o o|" + System.lineSeparator() + 
+					"+ +-+-+" + System.lineSeparator() + 
+					"|o o o|" + System.lineSeparator() + 
+					"+-----+" + System.lineSeparator()) );
+
+			System.out.println("test() successful.");
+		}
+	}
+		
+	//////////////////////////////////////////////////////////
+	
 	public static void main(String[] args) {
 		StGenTester tester = new StGenTester();
 		
 		tester.parseArgs(args);
 		
-		tester.test();
+		tester.generateMaze();
+		
+		tester.printMaze(System.out);
+		
 	}
 	
-
 }
 
 
