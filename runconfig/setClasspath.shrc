@@ -1,0 +1,4 @@
+classpath=../build/libs/logback-classic-1.2.3.jar\;../build/libs/logback-core-1.2.3.jar\;../build/libs/slf4j-api-1.7.26.jar
+classpath=../build/libs/mazeGeneration.jar\;$classpath
+classpath=../build/classes/java/test\;$classpath
+classpath=.\;$classpath

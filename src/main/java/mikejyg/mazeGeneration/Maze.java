@@ -138,8 +138,8 @@ public class Maze {
 		if ( rows*drawScale > maxCanvasY )
 			drawScale = (double) maxCanvasY / rows;
 		
-		StdDraw.setCanvasSize( (int)( cols * drawScale )
-				, (int)( rows * drawScale ) );
+		StdDraw.setCanvasSize( (int)Math.ceil(cols * drawScale)
+				, (int)Math.ceil(rows * drawScale) );
 		
 		StdDraw.setXscale(1./2, cols + 1./2);
         StdDraw.setYscale(1./2, rows + 1./2);
@@ -151,8 +151,16 @@ public class Maze {
 			
 			for (var conn: conns) {
 				var node2 = conn.getToNode();
+				
+				// calculate the line segment of the wall between the 2 nodes
+				
+				// since all lines in a rectangular maze are either horizontal or vertical,
+				// so the end points of a cross line are the original end points with each of their x and y swapped.
+				
 				var centerX = (node.x + node2.x)/2.;
 				var centerY = (node.y + node2.y)/2.;
+				
+				// move the line segment to the center
 				
 				var nodeXRel = node.x - centerX;
 				var nodeYRel = node.y - centerY;
@@ -160,8 +168,11 @@ public class Maze {
 				var node2XRel = node2.x - centerX;
 				var node2YRel = node2.y - centerY;
 
+				// swap x, y, and move back to the original center
+				
 				StdDraw.line( centerX + nodeYRel, centerY + nodeXRel
 						, centerX + node2YRel, centerY + node2XRel );
+				
 			}	
 		}
 		

@@ -63,6 +63,7 @@ public class StGenTester {
 			maze.drawMaze();
 
 			// pause, until enter is pressed
+			System.out.println("press ENTER, or close the draw Window to exit.");
 			System.in.read();
 		}
 		
