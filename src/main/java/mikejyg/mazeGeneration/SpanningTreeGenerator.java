@@ -26,11 +26,11 @@ public class SpanningTreeGenerator< IdType, NodeType extends NodeIntf<IdType> > 
 	 * the connections of the generated spanning tree.
 	 * NOTE: only one one-way connection is recorded, for every bi-directional connection of the tree.
 	 */
-	private Collection< Connection<NodeType> > treeConnections;
+	private Collection< BidirectionalConnection<IdType, NodeType> > treeConnections;
 	
 	// working variables
 	
-	private Graph<IdType, NodeType> graph;
+	private UndirectedGraph<IdType, NodeType> graph;
 	
 	private Set<IdType> visitedNodeSet;
 	
@@ -42,15 +42,15 @@ public class SpanningTreeGenerator< IdType, NodeType extends NodeIntf<IdType> > 
 	 * generate a list of available connections for the next move
 	 * @return
 	 */
-	private List< Connection<NodeType> >  getValidConnections(NodeType startingNode) {
-		var availConns = new ArrayList<Connection<NodeType>>();
+	private List< BidirectionalConnection<IdType, NodeType> >  getValidConnections(NodeType startingNode) {
+		var availConns = new ArrayList<BidirectionalConnection<IdType, NodeType>>();
 		
-		var conns = graph.getConnectionsFrom(startingNode);
+		var conns = graph.getConnectionsOf(startingNode);
 		var it = conns.iterator();
 		while (it.hasNext()) {
 			var conn = it.next();
 			
-			if ( visitedNodeSet.contains( conn.getToNode().getId() ) ) {
+			if ( visitedNodeSet.contains( conn.getTheOtherNode(startingNode).getId() ) ) {
 				continue;
 			}
 			
@@ -80,7 +80,7 @@ public class SpanningTreeGenerator< IdType, NodeType extends NodeIntf<IdType> > 
 			
 			treeConnections.add( conn );
 			
-			genSpanningTree(conn.getToNode());
+			genSpanningTree(conn.getTheOtherNode(startingNode));
 			
 			// early termination criteria
 			if ( visitedNodeSet.size() == graph.size() )
@@ -92,7 +92,7 @@ public class SpanningTreeGenerator< IdType, NodeType extends NodeIntf<IdType> > 
 
 	////////////////////////////////////////////////
 
-	public void genSpanningTree(Graph<IdType, NodeType> graph, NodeType startingNode) {
+	public void genSpanningTree(UndirectedGraph<IdType, NodeType> graph, NodeType startingNode) {
 		this.graph = graph;
 		
 		visitedNodeSet = new TreeSet<>();
@@ -105,7 +105,7 @@ public class SpanningTreeGenerator< IdType, NodeType extends NodeIntf<IdType> > 
 
 	}
 	
-	public Collection< Connection<NodeType> > getTreeConnections() {
+	public Collection< BidirectionalConnection<IdType, NodeType> > getTreeConnections() {
 		return treeConnections;
 	}
 
