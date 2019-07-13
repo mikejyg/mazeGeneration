@@ -89,14 +89,12 @@ public class Maze {
 
 		System.out.println("starting from: " + nodes[rowIdx][colIdx]);
 		
+		stg.setRemoveConnectionsOnTheGo(true);
+		
 		stg.genSpanningTree(graph, nodes[rowIdx][colIdx]);
 		
-		// remove all connections (walls) of the graph, and the resulting graph will be the maze
-		
-		for ( var conn : stg.getTreeConnections() ) {
-			graph.removeConnection(conn);
-		}
-		
+//		stg.removeTreeConnectionsFromGraph();
+	
 //		System.out.println(graph.toString());
 		
 	}

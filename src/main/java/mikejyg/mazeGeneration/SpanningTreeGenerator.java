@@ -36,6 +36,13 @@ public class SpanningTreeGenerator< IdType, NodeType extends NodeIntf<IdType> > 
 	
 	private Random random;
 	
+	/**
+	 * Remove connections from the graph while traversing the graph.
+	 * This is faster, than calling removeTreeConnectionsFromGraph() later. 
+	 * However, it changes the graph during tree generation.
+	 */
+	private boolean removeConnectionsOnTheGo;
+	
 	////////////////////////////////////////////////
 	
 	/**
@@ -60,8 +67,6 @@ public class SpanningTreeGenerator< IdType, NodeType extends NodeIntf<IdType> > 
 		return availConns;
 	}
 	
-	////////////////////////////////////////////////
-	
 	private void genSpanningTree(NodeType startingNode) {
 		logger.debug("genSpanningTree() " + startingNode);
 		
@@ -79,6 +84,9 @@ public class SpanningTreeGenerator< IdType, NodeType extends NodeIntf<IdType> > 
 			// take the move
 			
 			treeConnections.add( conn );
+			
+			if (removeConnectionsOnTheGo)
+				graph.removeConnection(conn);
 			
 			genSpanningTree(conn.getTheOtherNode(startingNode));
 			
@@ -111,6 +119,19 @@ public class SpanningTreeGenerator< IdType, NodeType extends NodeIntf<IdType> > 
 
 	public void setRandom(Random random) {
 		this.random = random;
+	}
+
+	/**
+	 * remove all connections (walls) of the graph, and the resulting graph will be the maze
+	 */
+	public void removeTreeConnectionsFromGraph() {
+		for ( var conn : getTreeConnections() ) {
+			graph.removeConnection(conn);
+		}
+	}
+	
+	public void setRemoveConnectionsOnTheGo(boolean removeConnectionsOnTheGo) {
+		this.removeConnectionsOnTheGo = removeConnectionsOnTheGo;
 	}
 
 	
