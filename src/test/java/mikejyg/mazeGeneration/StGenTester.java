@@ -17,6 +17,8 @@ public class StGenTester {
 
 	Maze maze;
 	
+	boolean drawFlag;
+	
 	///////////////////////////////////////////////////
 	
 	/**
@@ -28,14 +30,20 @@ public class StGenTester {
 		int argIdx=0;
 		
 		if (args.length < 2) {
-			System.out.println("usage: rows cols [random_seed]");
+			System.out.println("usage: [-d] cols rows [random_seed]");
+			System.out.println("\t-d draw the generated maze and wait for user to press ENTER.");
 			System.exit(1);
+		}
+		
+		if (args[0].contentEquals("-d")) {
+			argIdx++;
+			drawFlag = true;
 		}
 		
 		maze=new Maze();
 
-		maze.setRows( Integer.parseInt(args[argIdx++]) );
 		maze.setCols( Integer.parseInt(args[argIdx++]) );
+		maze.setRows( Integer.parseInt(args[argIdx++]) );
 		
 		if (args.length>argIdx)
 			maze.setRandom(new Random(Integer.parseInt(args[argIdx++])) );
@@ -44,12 +52,19 @@ public class StGenTester {
 		
 	}
 	
-	public void generateMaze() {
+	public void generateMaze() throws IOException {
 		maze.buildGraph();
 		
 		maze.toMaze();
 		
 		maze.printMaze(System.out);
+		
+		if (drawFlag) {
+			maze.drawMaze();
+
+			// pause, until enter is pressed
+			System.in.read();
+		}
 		
 	}
 	
@@ -89,12 +104,14 @@ public class StGenTester {
 		
 	//////////////////////////////////////////////////////////
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException, IOException {
 		StGenTester tester = new StGenTester();
 		
 		tester.parseArgs(args);
 		
 		tester.generateMaze();
+		
+		System.exit(0);
 		
 	}
 	

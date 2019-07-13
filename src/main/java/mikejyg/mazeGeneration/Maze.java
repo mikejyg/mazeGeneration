@@ -3,13 +3,14 @@ package mikejyg.mazeGeneration;
 import java.io.PrintStream;
 import java.util.Random;
 
+import edu.princeton.cs.algs4.StdDraw;
+
 /**
  * a rectangular maze
  * @author mikejyg
  *
  */
 public class Maze {
-	
 	static public class Node implements NodeIntf<Integer> {
 		// the coordinate of the cell
 		public int x, y;
@@ -49,6 +50,12 @@ public class Maze {
 	private Graph<Integer, Node> graph;
 	
 	private Node[][] nodes;
+
+	private double drawScale = 50;
+
+	private int maxCanvasX = 1024;
+	
+	private int maxCanvasY = 768;
 	
 	///////////////////////////////////////////////
 	
@@ -70,7 +77,7 @@ public class Maze {
 		
 		for (int row=0; row<rows; row++) {
 			for (int col=0; col<cols; col++) {
-				var node = new Node( row+1, col+1, row * cols + col );
+				var node = new Node( col+1, row+1, row * cols + col );
 				nodes[row][col] = node;
 				graph.addNode(node);
 			}
@@ -118,6 +125,47 @@ public class Maze {
 		}
 		
 //		System.out.println(graph.toString());
+		
+	}
+	
+	public void drawMaze() {
+		StdDraw.enableDoubleBuffering();
+		
+		// reduce draw scale to fit in max canvas size
+		if ( cols*drawScale > maxCanvasX)
+			drawScale = (double) maxCanvasX / cols;
+		
+		if ( rows*drawScale > maxCanvasY )
+			drawScale = (double) maxCanvasY / rows;
+		
+		StdDraw.setCanvasSize( (int)( cols * drawScale )
+				, (int)( rows * drawScale ) );
+		
+		StdDraw.setXscale(1./2, cols + 1./2);
+        StdDraw.setYscale(1./2, rows + 1./2);
+        
+		StdDraw.setPenColor(StdDraw.BLACK);
+		
+		for (var node : graph.getNodeSet()) {
+			var conns = graph.getConnectionsFrom(node);
+			
+			for (var conn: conns) {
+				var node2 = conn.getToNode();
+				var centerX = (node.x + node2.x)/2.;
+				var centerY = (node.y + node2.y)/2.;
+				
+				var nodeXRel = node.x - centerX;
+				var nodeYRel = node.y - centerY;
+
+				var node2XRel = node2.x - centerX;
+				var node2YRel = node2.y - centerY;
+
+				StdDraw.line( centerX + nodeYRel, centerY + nodeXRel
+						, centerX + node2YRel, centerY + node2XRel );
+			}	
+		}
+		
+		StdDraw.show();
 		
 	}
 	

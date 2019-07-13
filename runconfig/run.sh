@@ -19,7 +19,7 @@ java -cp $classpath mikejyg.mazeGeneration.StGenTester 3 3 3 | tee -a test.out
 
 java -cp $classpath mikejyg.mazeGeneration.StGenTester 3 3 4 | tee -a test.out
 
-java -cp $classpath mikejyg.mazeGeneration.StGenTester 10 20 1 | tee -a test.out
+java -cp $classpath mikejyg.mazeGeneration.StGenTester 20 10 1 | tee -a test.out
 
 echo comparing with golden log...
 diff golden/test.out test.out
