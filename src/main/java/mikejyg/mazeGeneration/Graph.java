@@ -11,11 +11,8 @@ import java.util.TreeMap;
  * @author jgu
  *
  */
-public class Graph<IdType, NodeType extends NodeIntf<IdType> > 
+public class Graph<IdType, NodeType extends NodeIntf<IdType> > extends GraphNodes<IdType, NodeType>
 	implements GraphIntf< IdType, NodeType > {
-	
-	// the node set
-	private Map<IdType, NodeType> nodeSet = new TreeMap<>();
 	
 	// fromNode -> connection index
 	private Map<IdType, Collection< Connection<NodeType> > > nodeToConnectionsMap = new TreeMap<>();
@@ -23,16 +20,6 @@ public class Graph<IdType, NodeType extends NodeIntf<IdType> >
 	/////////////////////////////////////////////////
 
 	public Graph() {}
-	
-	@Override
-	public Collection<NodeType> getNodeSet() {
-		return nodeSet.values();
-	}
-	
-	@Override
-	public void addNode(NodeType node) {
-		nodeSet.put(node.getId(), node);
-	}
 	
 	/**
 	 * get all the connections from a node.
@@ -99,18 +86,11 @@ public class Graph<IdType, NodeType extends NodeIntf<IdType> >
 	public boolean isConnection(NodeType fromNode, NodeType toNode) {
 		var conns = getConnectionsFrom(fromNode);
 		
-		// TODO right now it is a linear search, may need to use a more scalable way.
-		
 		for (var conn : conns) {
 			if (conn.getToNode().equals(toNode))
 				return true;
 		}
 		return false;
-	}
-	
-	@Override
-	public int size() {
-		return nodeSet.size();
 	}
 	
 	@Override

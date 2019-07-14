@@ -15,11 +15,10 @@ import mikejyg.tree.TreeTraversal;
 /**
  * turns a graph into a spanning tree
  * 
- * assuming the graph only contains bi-directional connections, 
- *   that is, for each connection, there exists a reverse connection.
- *    
  * @author jgu
  *
+ * TODO: use a more sophisticated graph traverse algorithm, than DFS.    
+ * 
  */
 public class SpanningTreeGenerator< IdType, NodeType extends NodeIntf<IdType> > {
 	static final Logger logger = LoggerFactory.getLogger(SpanningTreeGenerator.class);

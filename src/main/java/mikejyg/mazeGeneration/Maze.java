@@ -12,6 +12,10 @@ import edu.princeton.cs.algs4.StdDraw;
  * a rectangular maze
  * @author mikejyg
  *
+ * TODO: Add the ability to create a room, that has its own walls.
+ * 
+ * TODO: Add and draw exterior walls.
+ * 
  */
 public class Maze {
 
@@ -137,6 +141,8 @@ public class Maze {
 				var node2 = conn.getTheOtherNode(node);
 				
 				// calculate the line segment of the wall between the 2 nodes
+				
+				// TODO: use a more generic method, that works for non-horizontal/vertical lies
 				
 				// since all lines in a rectangular maze are either horizontal or vertical,
 				// so the end points of a cross line are the original end points with each of their x and y swapped.

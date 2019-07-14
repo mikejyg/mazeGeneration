@@ -13,28 +13,15 @@ import java.util.TreeMap;
  * @param <IdType>
  * @param <NodeType>
  */
-public class UndirectedGraph<IdType, NodeType extends NodeIntf<IdType> > 
+public class UndirectedGraph<IdType, NodeType extends NodeIntf<IdType> > extends GraphNodes<IdType, NodeType>
 	implements GraphIntf< IdType, NodeType > {
 	
-	// the node set
-	private Map<IdType, NodeType> nodeSet = new TreeMap<>();
-		
 	// Node ID -> connection index
 	private Map<IdType, Collection< BidirectionalConnection<IdType, NodeType> > > nodeToConnectionsMap = new TreeMap<>();
 	
 	/////////////////////////////////////////////////
 
 	public UndirectedGraph() {}
-	
-	@Override
-	public Collection<NodeType> getNodeSet() {
-		return nodeSet.values();
-	}
-	
-	@Override
-	public void addNode(NodeType node) {
-		nodeSet.put(node.getId(), node);
-	}
 	
 	/**
 	 * get all the connections from a node.
@@ -100,19 +87,12 @@ public class UndirectedGraph<IdType, NodeType extends NodeIntf<IdType> >
 		
 		var conns = getConnectionsFrom(node1);
 		
-		// TODO right now it is a linear search, may need to use a more scalable way.
-		
 		for (var c : conns) {
 			if ( c.equals(conn) )
 				return true;
 		}
 		
 		return false;
-	}
-	
-	@Override
-	public int size() {
-		return nodeSet.size();
 	}
 	
 	@Override

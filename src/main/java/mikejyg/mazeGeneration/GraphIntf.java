@@ -7,25 +7,19 @@ import java.util.Collection;
  * @author mikejyg
  *
  */
-public interface GraphIntf< IdType, NodeType extends NodeIntf<IdType> > {
+public interface GraphIntf< IdType, NodeType extends NodeIntf<IdType> > extends GraphNodesIntf<NodeType> {
 	
-	public void addNode(NodeType node);
-
 	public void addConnectionOneWay(NodeType fromNode, NodeType toNode);
 	
 	public void addConnectionBothWays(NodeType fromNode, NodeType toNode);
 	
 	public Collection< ? extends ConnectionIntf<NodeType> > getConnectionsFrom(NodeType fromNode);
 	
-	public Collection<NodeType> getNodeSet();
-	
 	public boolean isConnection(NodeType fromNode, NodeType toNode);
 	
 	public void removeConnectionOneWay(NodeType fromNode, NodeType toNode);
 	
 	public void removeConnectionBothWays(NodeType fromNode, NodeType toNode);
-	
-	public int size();
 	
 	
 }
