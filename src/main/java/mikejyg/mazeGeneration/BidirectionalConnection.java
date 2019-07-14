@@ -8,7 +8,7 @@ package mikejyg.mazeGeneration;
  * @param <IdType>
  * @param <NodeType>
  */
-public class BidirectionalConnection< IdType, NodeType extends NodeIntf<IdType> > {
+public class BidirectionalConnection< IdType, NodeType extends NodeIntf<IdType> > implements ConnectionIntf<NodeType> {
 
 	/**
 	 *  a pair of nodes. 
@@ -37,6 +37,10 @@ public class BidirectionalConnection< IdType, NodeType extends NodeIntf<IdType> 
 		}
 	}
 
+	private Pair<NodeType> getNodePair() {
+		return nodePair;
+	}
+
 	//////////////////////////////////////////////
 	
 	public BidirectionalConnection(NodeType node1, NodeType node2) {
@@ -44,10 +48,7 @@ public class BidirectionalConnection< IdType, NodeType extends NodeIntf<IdType> 
 		setNodes(node1, node2);
 	}
 	
-	public Pair<NodeType> getNodePair() {
-		return nodePair;
-	}
-
+	@Override
 	public NodeType getTheOtherNode(NodeType node1) {
 		if ( nodePair.v1.equals(node1) ) {
 			return nodePair.v2;
@@ -66,12 +67,22 @@ public class BidirectionalConnection< IdType, NodeType extends NodeIntf<IdType> 
 		return nodePair.equals(c2.nodePair);
 	}
 	
+	@Override
+	public NodeType getFromNode() {
+		return getNodePair().v1;
+	}
+
+	@Override
+	public NodeType getToNode() {
+		return getNodePair().v2;
+	}
+	
 	//////////////////////////////////////////////
 	
 	@Override
 	public String toString() {
 		return "{ " + nodePair.v1.toString() + " - " + nodePair.v2.toString() + " }";
 	}
-	
+
 
 }

@@ -13,7 +13,9 @@ import java.util.TreeMap;
  * @param <IdType>
  * @param <NodeType>
  */
-public class UndirectedGraph<IdType, NodeType extends NodeIntf<IdType> > {
+public class UndirectedGraph<IdType, NodeType extends NodeIntf<IdType> > 
+	implements GraphIntf< IdType, NodeType > {
+	
 	// the node set
 	private Map<IdType, NodeType> nodeSet = new TreeMap<>();
 		
@@ -21,14 +23,15 @@ public class UndirectedGraph<IdType, NodeType extends NodeIntf<IdType> > {
 	private Map<IdType, Collection< BidirectionalConnection<IdType, NodeType> > > nodeToConnectionsMap = new TreeMap<>();
 	
 	/////////////////////////////////////////////////
+
+	public UndirectedGraph() {}
 	
-
-	/////////////////////////////////////////////////
-
+	@Override
 	public Collection<NodeType> getNodeSet() {
 		return nodeSet.values();
 	}
 	
+	@Override
 	public void addNode(NodeType node) {
 		nodeSet.put(node.getId(), node);
 	}
@@ -37,7 +40,8 @@ public class UndirectedGraph<IdType, NodeType extends NodeIntf<IdType> > {
 	 * get all the connections from a node.
 	 * @param a collection of connections. It can be empty, but not null.
 	 */
-	public Collection< BidirectionalConnection<IdType, NodeType> > getConnectionsOf(NodeType node) {
+	@Override
+	public Collection< BidirectionalConnection<IdType, NodeType> > getConnectionsFrom(NodeType node) {
 		var conns = nodeToConnectionsMap.get(node.getId());
 		if (conns==null) {
 			if ( ! nodeSet.containsKey(node.getId()) ) {
@@ -50,8 +54,11 @@ public class UndirectedGraph<IdType, NodeType extends NodeIntf<IdType> > {
 		return conns;
 	}
 	
-	public void addConnection(BidirectionalConnection<IdType, NodeType> newConn) {
-		var conns = getConnectionsOf(newConn.getNodePair().v1);
+	@Override
+	public void addConnectionBothWays(NodeType node1, NodeType node2) {
+		var newConn = new BidirectionalConnection<>(node1, node2);
+		
+		var conns = getConnectionsFrom(newConn.getFromNode());
 		
 		// check for duplication
 		for (var conn : conns) {
@@ -61,15 +68,13 @@ public class UndirectedGraph<IdType, NodeType extends NodeIntf<IdType> > {
 		
 		conns.add(newConn);
 		
-		getConnectionsOf(newConn.getNodePair().v2).add(newConn);
+		getConnectionsFrom(newConn.getToNode()).add(newConn);
 	}
 	
-	public void addConnection(NodeType node1, NodeType node2) {
-		addConnection(new BidirectionalConnection<>(node1, node2));
-	}
-	
-	public void removeConnection(BidirectionalConnection<IdType, NodeType> conn) {
-		var conns = getConnectionsOf(conn.getNodePair().v1);
+	@Override
+	public void removeConnectionBothWays(NodeType node1, NodeType node2) {
+		var conn = new BidirectionalConnection<>(node1, node2);
+		var conns = getConnectionsFrom(conn.getFromNode());
 		
 		for (var c : conns) {
 			if ( c.equals(conn) ) {
@@ -78,7 +83,7 @@ public class UndirectedGraph<IdType, NodeType extends NodeIntf<IdType> > {
 			}
 		}
 
-		conns = getConnectionsOf(conn.getNodePair().v2);
+		conns = getConnectionsFrom(conn.getToNode());
 		
 		for (var c : conns) {
 			if ( c.equals(conn) ) {
@@ -89,14 +94,11 @@ public class UndirectedGraph<IdType, NodeType extends NodeIntf<IdType> > {
 		
 	}
 	
-	public void removeConnection(NodeType node1, NodeType node2) {
-		removeConnection(new BidirectionalConnection<>(node1, node2));
-	}
-	
-	public boolean isConnected(NodeType node1, NodeType node2) {
+	@Override
+	public boolean isConnection(NodeType node1, NodeType node2) {
 		var conn = new BidirectionalConnection<IdType, NodeType>(node1, node2);
 		
-		var conns = getConnectionsOf(node1);
+		var conns = getConnectionsFrom(node1);
 		
 		// TODO right now it is a linear search, may need to use a more scalable way.
 		
@@ -108,6 +110,7 @@ public class UndirectedGraph<IdType, NodeType extends NodeIntf<IdType> > {
 		return false;
 	}
 	
+	@Override
 	public int size() {
 		return nodeSet.size();
 	}
@@ -127,6 +130,17 @@ public class UndirectedGraph<IdType, NodeType extends NodeIntf<IdType> > {
 		}
 		return str;
 		
+	}
+
+	@Override
+	public void addConnectionOneWay(NodeType fromNode, NodeType toNode) {
+		throw new Error("addConnectionOneWay() not applicable.");
+		
+	}
+
+	@Override
+	public void removeConnectionOneWay(NodeType fromNode, NodeType toNode) {
+		throw new Error("addConnectionOneWay() not applicable.");
 	}
 	
 

@@ -7,7 +7,7 @@ package mikejyg.mazeGeneration;
  *
  * @param <NodeType>
  */
-public class Connection<NodeType> {
+public class Connection<NodeType> implements ConnectionIntf<NodeType> {
 	private NodeType fromNode, toNode;
 
 	//////////////////////////////////////////////
@@ -26,23 +26,35 @@ public class Connection<NodeType> {
 		return "{ " + fromNode.toString() + " - " + toNode.toString() + " }";
 	}
 	
+	@Override
+	public NodeType getTheOtherNode(NodeType node1) {
+		if (fromNode.equals(node1)) {
+			return toNode;
+		} else {
+			assert(toNode.equals(node1));
+			return fromNode;
+		}
+	}
+	
 	//////////////////////////////////////////////
 	
+	@Override
 	public NodeType getFromNode() {
 		return fromNode;
 	}
 
-	public void setFromNode(NodeType fromNode) {
-		this.fromNode = fromNode;
-	}
+//	public void setFromNode(NodeType fromNode) {
+//		this.fromNode = fromNode;
+//	}
 
+	@Override
 	public NodeType getToNode() {
 		return toNode;
 	}
 
-	public void setToNode(NodeType toNode) {
-		this.toNode = toNode;
-	}
+//	public void setToNode(NodeType toNode) {
+//		this.toNode = toNode;
+//	}
 
 	
 }

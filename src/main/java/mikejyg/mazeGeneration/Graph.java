@@ -11,7 +11,8 @@ import java.util.TreeMap;
  * @author jgu
  *
  */
-public class Graph<IdType, NodeType extends NodeIntf<IdType> > {
+public class Graph<IdType, NodeType extends NodeIntf<IdType> > 
+	implements GraphIntf< IdType, NodeType > {
 	
 	// the node set
 	private Map<IdType, NodeType> nodeSet = new TreeMap<>();
@@ -20,14 +21,15 @@ public class Graph<IdType, NodeType extends NodeIntf<IdType> > {
 	private Map<IdType, Collection< Connection<NodeType> > > nodeToConnectionsMap = new TreeMap<>();
 	
 	/////////////////////////////////////////////////
+
+	public Graph() {}
 	
-
-	/////////////////////////////////////////////////
-
+	@Override
 	public Collection<NodeType> getNodeSet() {
 		return nodeSet.values();
 	}
 	
+	@Override
 	public void addNode(NodeType node) {
 		nodeSet.put(node.getId(), node);
 	}
@@ -36,6 +38,7 @@ public class Graph<IdType, NodeType extends NodeIntf<IdType> > {
 	 * get all the connections from a node.
 	 * @param a collection of connections. It can be empty, but not null.
 	 */
+	@Override
 	public Collection< Connection<NodeType> > getConnectionsFrom(NodeType fromNode) {
 		var conns = nodeToConnectionsMap.get(fromNode.getId());
 		if (conns==null) {
@@ -49,7 +52,8 @@ public class Graph<IdType, NodeType extends NodeIntf<IdType> > {
 		return conns;
 	}
 	
-	public void addConnectionFromTo(NodeType fromNode, NodeType toNode) {
+	@Override
+	public void addConnectionOneWay(NodeType fromNode, NodeType toNode) {
 		var conns = getConnectionsFrom(fromNode);
 		
 		// check for duplication
@@ -62,12 +66,14 @@ public class Graph<IdType, NodeType extends NodeIntf<IdType> > {
 		conns.add(newConn);
 	}
 	
-	public void addBiDirConnection(NodeType node1, NodeType node2) {
-		addConnectionFromTo(node1, node2);
-		addConnectionFromTo(node2, node1);
+	@Override
+	public void addConnectionBothWays(NodeType node1, NodeType node2) {
+		addConnectionOneWay(node1, node2);
+		addConnectionOneWay(node2, node1);
 	}
 	
-	public void removeConnectionFromTo(NodeType fromNode, NodeType toNode) {
+	@Override
+	public void removeConnectionOneWay(NodeType fromNode, NodeType toNode) {
 		var conns = getConnectionsFrom(fromNode);
 		
 		for (var conn : conns) {
@@ -83,11 +89,13 @@ public class Graph<IdType, NodeType extends NodeIntf<IdType> > {
 	 * @param fromNode
 	 * @param toNode
 	 */
-	public void removeBiDirConnection(NodeType node1, NodeType node2) {
-		removeConnectionFromTo(node1, node2);
-		removeConnectionFromTo(node2, node1);
+	@Override
+	public void removeConnectionBothWays(NodeType node1, NodeType node2) {
+		removeConnectionOneWay(node1, node2);
+		removeConnectionOneWay(node2, node1);
 	}
 	
+	@Override
 	public boolean isConnection(NodeType fromNode, NodeType toNode) {
 		var conns = getConnectionsFrom(fromNode);
 		
@@ -100,6 +108,7 @@ public class Graph<IdType, NodeType extends NodeIntf<IdType> > {
 		return false;
 	}
 	
+	@Override
 	public int size() {
 		return nodeSet.size();
 	}

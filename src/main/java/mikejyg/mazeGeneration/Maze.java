@@ -26,7 +26,7 @@ public class Maze {
 	
 	// working variables
 	
-	private UndirectedGraph<Integer, MazeCell> graph;
+	private GraphIntf<Integer, MazeCell> graph;
 	
 	private MazeCell[][] nodes;
 
@@ -48,7 +48,8 @@ public class Maze {
 		// construct a graph for the initial maze, with all interior (non-boundary) walls present.
 		// the nodes represent cells, and the connections represent walls.
 		
-		graph = new UndirectedGraph<Integer, MazeCell>();
+//		graph = new UndirectedGraph<Integer, MazeCell>();
+		graph = new Graph<Integer, MazeCell>();
 		
 		// create the nodes
 		
@@ -67,12 +68,12 @@ public class Maze {
 			for (int col=0; col<cols; col++) {
 				// right?
 				if (col<cols-1) {
-					graph.addConnection(nodes[row][col], nodes[row][col+1]);
+					graph.addConnectionBothWays(nodes[row][col], nodes[row][col+1]);
 				}
 				
 				// down?
 				if (row<rows-1) {
-					graph.addConnection(nodes[row][col], nodes[row+1][col]);
+					graph.addConnectionBothWays(nodes[row][col], nodes[row+1][col]);
 				}
 				
 			}
@@ -126,7 +127,7 @@ public class Maze {
 		StdDraw.setPenColor(StdDraw.BLACK);
 		
 		for (var node : graph.getNodeSet()) {
-			var conns = graph.getConnectionsOf(node);
+			var conns = graph.getConnectionsFrom(node);
 			
 			for (var conn: conns) {
 				var node2 = conn.getTheOtherNode(node);
@@ -178,7 +179,7 @@ public class Maze {
 			for (int col=0; col<cols; col++) {
 				printStream.print("o");
 				if (col<cols-1) {
-					if ( graph.isConnected(nodes[row][col], nodes[row][col+1]) ) {
+					if ( graph.isConnection(nodes[row][col], nodes[row][col+1]) ) {
 						printStream.print("|");
 					} else {
 						printStream.print(" ");
@@ -190,7 +191,7 @@ public class Maze {
 			printStream.print("+");
 			for (int col=0; col<cols; col++) {
 				if (row < rows-1) {
-					if ( graph.isConnected(nodes[row][col], nodes[row+1][col]) ) {
+					if ( graph.isConnection(nodes[row][col], nodes[row+1][col]) ) {
 						printStream.print("-+");
 					} else {
 						printStream.print(" +");

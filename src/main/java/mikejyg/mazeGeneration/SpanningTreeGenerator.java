@@ -28,7 +28,9 @@ public class SpanningTreeGenerator< IdType, NodeType extends NodeIntf<IdType> > 
 	
 	// working variables
 	
-	private UndirectedGraph<IdType, NodeType> graph;
+//	private UndirectedGraph<IdType, NodeType> graph;
+	
+	private GraphIntf<IdType, NodeType> graph;
 	
 	private Set<IdType> visitedNodeSet;
 	
@@ -47,10 +49,10 @@ public class SpanningTreeGenerator< IdType, NodeType extends NodeIntf<IdType> > 
 	 * generate a list of available connections for the next move
 	 * @return
 	 */
-	private List< BidirectionalConnection<IdType, NodeType> >  getValidConnections(NodeType startingNode) {
-		var availConns = new ArrayList<BidirectionalConnection<IdType, NodeType>>();
+	private List< ConnectionIntf<NodeType> >  getValidConnections(NodeType startingNode) {
+		var availConns = new ArrayList< ConnectionIntf<NodeType> >();
 		
-		var conns = graph.getConnectionsOf(startingNode);
+		var conns = graph.getConnectionsFrom(startingNode);
 		var it = conns.iterator();
 		while (it.hasNext()) {
 			var conn = it.next();
@@ -67,7 +69,7 @@ public class SpanningTreeGenerator< IdType, NodeType extends NodeIntf<IdType> > 
 	
 	////////////////////////////////////////////////
 
-	public void genSpanningTree(UndirectedGraph<IdType, NodeType> graph, NodeType startingNode) {
+	public void genSpanningTree(GraphIntf< IdType, NodeType > graph, NodeType startingNode) {
 		this.graph = graph;
 		
 		if (random==null)
@@ -100,7 +102,7 @@ public class SpanningTreeGenerator< IdType, NodeType extends NodeIntf<IdType> > 
 			treeNode.addChild(newTreeNode);
 			
 			if (removeConnectionsOnTheGo)
-				graph.removeConnection(conn);
+				graph.removeConnectionBothWays(conn.getFromNode(), conn.getToNode());
 			
 			treeNode = newTreeNode;
 			
@@ -125,7 +127,7 @@ public class SpanningTreeGenerator< IdType, NodeType extends NodeIntf<IdType> > 
 			if (node.getParent()!=null) {
 				@SuppressWarnings("unchecked")
 				var treeNode = (TreeNode<NodeType>)node;
-				graph.removeConnection( treeNode.getParent().getNodeData(), treeNode.getNodeData());
+				graph.removeConnectionBothWays( treeNode.getParent().getNodeData(), treeNode.getNodeData());
 			}
 		});
 	}
