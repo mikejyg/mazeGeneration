@@ -14,4 +14,8 @@ public interface ConnectionIntf<NodeType> {
 
 	public NodeType getTheOtherNode(NodeType node1);
 	
+	// this is here, so that the usage of it can be found by Eclipse.
+	@Override
+	boolean equals(Object obj);
+	
 }
