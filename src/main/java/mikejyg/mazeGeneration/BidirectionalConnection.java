@@ -1,5 +1,13 @@
 package mikejyg.mazeGeneration;
 
+/**
+ * connections of an undirected graph.
+ * 
+ * @author mikejyg
+ *
+ * @param <IdType>
+ * @param <NodeType>
+ */
 public class BidirectionalConnection< IdType, NodeType extends NodeIntf<IdType> > {
 
 	/**

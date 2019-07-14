@@ -5,6 +5,14 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * an undirected graph.
+ * 
+ * @author mikejyg
+ *
+ * @param <IdType>
+ * @param <NodeType>
+ */
 public class UndirectedGraph<IdType, NodeType extends NodeIntf<IdType> > {
 	// the node set
 	private Map<IdType, NodeType> nodeSet = new TreeMap<>();

@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * a simple tree node.
+ * a simple TreeNodeIntf implementation.
  * 
  * @author mikejyg
  *

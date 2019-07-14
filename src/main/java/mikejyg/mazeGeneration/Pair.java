@@ -1,5 +1,12 @@
 package mikejyg.mazeGeneration;
 
+/**
+ * a simple pair class.
+ * 
+ * @author mikejyg
+ *
+ * @param <T>
+ */
 public class Pair<T> {
 	public T v1, v2;
 	

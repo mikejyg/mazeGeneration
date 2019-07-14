@@ -1,5 +1,11 @@
 package mikejyg.mazeGeneration;
 
+/**
+ * a maze cell with position information.
+ * 
+ * @author mikejyg
+ *
+ */
 public class MazeCell implements NodeIntf<Integer> {
 	// the coordinate of the cell
 	public int x, y;

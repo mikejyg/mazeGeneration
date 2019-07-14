@@ -2,6 +2,12 @@ package mikejyg.tree;
 
 import java.util.function.Consumer;
 
+/**
+ * traverse the TreeNodeIntf.
+ * 
+ * @author mikejyg
+ *
+ */
 public class TreeTraversal {
 
 	// working variable
