@@ -1,7 +1,6 @@
 package mikejyg.mazeGeneration;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -9,6 +8,9 @@ import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import mikejyg.tree.TreeNode;
+import mikejyg.tree.TreeTraversal;
 
 /**
  * turns a graph into a spanning tree
@@ -22,11 +24,7 @@ import org.slf4j.LoggerFactory;
 public class SpanningTreeGenerator< IdType, NodeType extends NodeIntf<IdType> > {
 	static final Logger logger = LoggerFactory.getLogger(SpanningTreeGenerator.class);
 	
-	/**
-	 * the connections of the generated spanning tree.
-	 * NOTE: only one one-way connection is recorded, for every bi-directional connection of the tree.
-	 */
-	private Collection< BidirectionalConnection<IdType, NodeType> > treeConnections;
+	private TreeNode<NodeType> treeRoot;
 	
 	// working variables
 	
@@ -67,15 +65,29 @@ public class SpanningTreeGenerator< IdType, NodeType extends NodeIntf<IdType> > 
 		return availConns;
 	}
 	
-	private void genSpanningTree(NodeType startingNode) {
-		logger.debug("genSpanningTree() " + startingNode);
-		
-		visitedNodeSet.add(startingNode.getId());
+	////////////////////////////////////////////////
 
-		while (true) {
-			var availConns = getValidConnections(startingNode);
-			if (availConns.isEmpty())
-				break;
+	public void genSpanningTree(UndirectedGraph<IdType, NodeType> graph, NodeType startingNode) {
+		this.graph = graph;
+		
+		if (random==null)
+			random = new Random();
+		
+		visitedNodeSet = new TreeSet<>();
+		treeRoot = new TreeNode<>(startingNode);
+		
+		var treeNode = treeRoot;
+		
+		while ( treeNode != null ) {
+			var nodeData = treeNode.getNodeData();
+			visitedNodeSet.add(nodeData.getId());
+			
+			var availConns = getValidConnections(nodeData);
+			if (availConns.isEmpty()) {
+				// backtrack
+				treeNode = treeNode.getParent();
+				continue;
+			}
 			
 			var connIdx = random.nextInt(availConns.size());
 				
@@ -83,40 +95,22 @@ public class SpanningTreeGenerator< IdType, NodeType extends NodeIntf<IdType> > 
 			
 			// take the move
 			
-			treeConnections.add( conn );
+			var newTreeNode = new TreeNode<>(conn.getTheOtherNode(nodeData), treeNode);
+
+			treeNode.addChild(newTreeNode);
 			
 			if (removeConnectionsOnTheGo)
 				graph.removeConnection(conn);
 			
-			genSpanningTree(conn.getTheOtherNode(startingNode));
+			treeNode = newTreeNode;
 			
 			// early termination criteria
 			if ( visitedNodeSet.size() == graph.size() )
 				break;
-			
-		}		
+		}
 		
-	}
-
-	////////////////////////////////////////////////
-
-	public void genSpanningTree(UndirectedGraph<IdType, NodeType> graph, NodeType startingNode) {
-		this.graph = graph;
-		
-		visitedNodeSet = new TreeSet<>();
-		treeConnections = new ArrayList<>();
-		
-		if (random==null)
-			random = new Random();
-		
-		genSpanningTree(startingNode);
-
 	}
 	
-	public Collection< BidirectionalConnection<IdType, NodeType> > getTreeConnections() {
-		return treeConnections;
-	}
-
 	public void setRandom(Random random) {
 		this.random = random;
 	}
@@ -125,9 +119,15 @@ public class SpanningTreeGenerator< IdType, NodeType extends NodeIntf<IdType> > 
 	 * remove all connections (walls) of the graph, and the resulting graph will be the maze
 	 */
 	public void removeTreeConnectionsFromGraph() {
-		for ( var conn : getTreeConnections() ) {
-			graph.removeConnection(conn);
-		}
+		var treeTraversal = new TreeTraversal();
+		
+		treeTraversal.traverse(treeRoot, node->{
+			if (node.getParent()!=null) {
+				@SuppressWarnings("unchecked")
+				var treeNode = (TreeNode<NodeType>)node;
+				graph.removeConnection( treeNode.getParent().getNodeData(), treeNode.getNodeData());
+			}
+		});
 	}
 	
 	public void setRemoveConnectionsOnTheGo(boolean removeConnectionsOnTheGo) {
