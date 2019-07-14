@@ -1,9 +1,6 @@
 package mikejyg.mazeGeneration;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 import org.junit.Test;
@@ -13,7 +10,7 @@ import org.junit.Test;
  * @author mikejyg
  *
  */
-public class StGenTester {
+public class MazeTest {
 
 	Maze maze;
 	
@@ -75,38 +72,45 @@ public class StGenTester {
 	 */
 	@Test
 	public void test() throws IOException {
+		var goldenStr = 
+				"+-----+" + System.lineSeparator() + 
+				"|o|o o|" + System.lineSeparator() + 
+				"+ +-+ +" + System.lineSeparator() + 
+				"|o o o|" + System.lineSeparator() + 
+				"+ +-+-+" + System.lineSeparator() + 
+				"|o o o|" + System.lineSeparator() + 
+				"+-----+" + System.lineSeparator();
+				
 		maze=new Maze();
 		maze.setRandom(new Random(1));
 		
 		maze.buildGraph();
 		maze.toMaze();
 		
-		try (var baos = new ByteArrayOutputStream();
-				var ps = new PrintStream(baos, true, StandardCharsets.UTF_8); ) {
-			maze.printMaze(ps);
-			
-			var str = new String(baos.toByteArray(), StandardCharsets.UTF_8);
-			
-			System.out.println(str);
-			
-			assert( str.contentEquals( 
-					"+-----+" + System.lineSeparator() + 
-					"|o|o o|" + System.lineSeparator() + 
-					"+ +-+ +" + System.lineSeparator() + 
-					"|o o o|" + System.lineSeparator() + 
-					"+ +-+-+" + System.lineSeparator() + 
-					"|o o o|" + System.lineSeparator() + 
-					"+-----+" + System.lineSeparator()) );
+		var mazeStr = maze.toString();
+		System.out.println(mazeStr);			
+		assert( mazeStr.contentEquals(goldenStr) );
 
-			System.out.println("test() successful.");
-			
-		}
-	}
+		// do another test with removeConnectionsOnTheGo enabled
+		maze=new Maze();
+		maze.setRandom(new Random(1));
+		maze.setRemoveConnectionsOnTheGo(true);
 		
+		maze.buildGraph();
+		maze.toMaze();
+		
+		mazeStr = maze.toString();
+		System.out.println(mazeStr);			
+		assert( mazeStr.contentEquals(goldenStr) );
+
+		System.out.println("test() successful.");
+
+	}
+
 	//////////////////////////////////////////////////////////
 	
 	public static void main(String[] args) throws InterruptedException, IOException {
-		StGenTester tester = new StGenTester();
+		MazeTest tester = new MazeTest();
 		
 		tester.parseArgs(args);
 		

@@ -2,4 +2,4 @@
 
 . setClasspath.shrc
 
-java -cp $classpath mikejyg.mazeGeneration.StGenTester "$@"
+java -cp $classpath mikejyg.mazeGeneration.MazeTest "$@"

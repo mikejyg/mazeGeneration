@@ -1,6 +1,9 @@
 package mikejyg.mazeGeneration;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 import edu.princeton.cs.algs4.StdDraw;
@@ -18,6 +21,9 @@ public class Maze {
 
 	private Random random;
 
+	// TODO: this option is not really needed. It is used to test the TreeTraversal for the moment.
+	private boolean removeConnectionsOnTheGo;
+	
 	// working variables
 	
 	private UndirectedGraph<Integer, MazeCell> graph;
@@ -89,11 +95,13 @@ public class Maze {
 
 		System.out.println("starting from: " + nodes[rowIdx][colIdx]);
 		
-		stg.setRemoveConnectionsOnTheGo(true);
+		if (removeConnectionsOnTheGo)
+			stg.setRemoveConnectionsOnTheGo(true);
 		
 		stg.genSpanningTree(graph, nodes[rowIdx][colIdx]);
 		
-//		stg.removeTreeConnectionsFromGraph();
+		if (!removeConnectionsOnTheGo)
+			stg.removeTreeConnectionsFromGraph();
 	
 //		System.out.println(graph.toString());
 		
@@ -219,5 +227,27 @@ public class Maze {
 	public void setRows(int rows) {
 		this.rows = rows;
 	}
+
+	public void setRemoveConnectionsOnTheGo(boolean removeConnectionsOnTheGo) {
+		this.removeConnectionsOnTheGo = removeConnectionsOnTheGo;
+	}
+
+	/////////////////////////////////////////////////////////////////
+	
+	@Override
+	public String toString() {
+		try (var baos = new ByteArrayOutputStream();
+				var ps = new PrintStream(baos, true, StandardCharsets.UTF_8); ) {
+			
+			printMaze(ps);
+
+			return new String(baos.toByteArray(), StandardCharsets.UTF_8);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new Error(e);
+		}
+	}
+	
 
 }
