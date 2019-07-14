@@ -95,6 +95,7 @@ public class MazeTest {
 		maze=new Maze();
 		maze.setRandom(new Random(1));
 		maze.setRemoveConnectionsOnTheGo(true);
+		maze.setUseDirectedGraph(true);
 		
 		maze.buildGraph();
 		maze.toMaze();

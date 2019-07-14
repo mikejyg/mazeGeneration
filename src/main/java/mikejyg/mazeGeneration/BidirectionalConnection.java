@@ -37,10 +37,6 @@ public class BidirectionalConnection< IdType, NodeType extends NodeIntf<IdType> 
 		}
 	}
 
-	private Pair<NodeType> getNodePair() {
-		return nodePair;
-	}
-
 	//////////////////////////////////////////////
 	
 	public BidirectionalConnection(NodeType node1, NodeType node2) {
@@ -69,12 +65,12 @@ public class BidirectionalConnection< IdType, NodeType extends NodeIntf<IdType> 
 	
 	@Override
 	public NodeType getFromNode() {
-		return getNodePair().v1;
+		return nodePair.v1;
 	}
 
 	@Override
 	public NodeType getToNode() {
-		return getNodePair().v2;
+		return nodePair.v2;
 	}
 	
 	//////////////////////////////////////////////

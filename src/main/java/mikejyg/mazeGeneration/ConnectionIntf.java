@@ -1,5 +1,11 @@
 package mikejyg.mazeGeneration;
 
+/**
+ * a common interface for both directed and undirected connections.
+ * @author mikejyg
+ *
+ * @param <NodeType>
+ */
 public interface ConnectionIntf<NodeType> {
 
 	public NodeType getFromNode();

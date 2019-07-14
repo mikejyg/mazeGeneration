@@ -3,7 +3,7 @@ package mikejyg.mazeGeneration;
 import java.util.Collection;
 
 /**
- * an interface common to both directed graph and undirected graph
+ * an interface common to both directed graph and undirected graph.
  * @author mikejyg
  *
  */

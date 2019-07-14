@@ -17,10 +17,14 @@ public class Connection<NodeType> implements ConnectionIntf<NodeType> {
 		this.toNode = toNode;
 	}
 	
-	public boolean equals(NodeType fromNode, NodeType toNode) {
-		return this.fromNode.equals(fromNode) && this.toNode.equals(toNode);
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean equals(Object obj) {
+		var c2 = (Connection<NodeType>)obj;
+		
+		return fromNode.equals(c2.fromNode) && toNode.equals(c2.toNode);
 	}
-
+	
 	@Override
 	public String toString() {
 		return "{ " + fromNode.toString() + " - " + toNode.toString() + " }";

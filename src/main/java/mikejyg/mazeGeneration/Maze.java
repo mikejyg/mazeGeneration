@@ -24,6 +24,8 @@ public class Maze {
 	// TODO: this option is not really needed. It is used to test the TreeTraversal for the moment.
 	private boolean removeConnectionsOnTheGo;
 	
+	private boolean useDirectedGraph;
+	
 	// working variables
 	
 	private GraphIntf<Integer, MazeCell> graph;
@@ -48,8 +50,10 @@ public class Maze {
 		// construct a graph for the initial maze, with all interior (non-boundary) walls present.
 		// the nodes represent cells, and the connections represent walls.
 		
-//		graph = new UndirectedGraph<Integer, MazeCell>();
-		graph = new Graph<Integer, MazeCell>();
+		if (useDirectedGraph)
+			graph = new Graph<Integer, MazeCell>();
+		else
+			graph = new UndirectedGraph<Integer, MazeCell>();	
 		
 		// create the nodes
 		
@@ -231,6 +235,10 @@ public class Maze {
 
 	public void setRemoveConnectionsOnTheGo(boolean removeConnectionsOnTheGo) {
 		this.removeConnectionsOnTheGo = removeConnectionsOnTheGo;
+	}
+
+	public void setUseDirectedGraph(boolean useDirectedGraph) {
+		this.useDirectedGraph = useDirectedGraph;
 	}
 
 	/////////////////////////////////////////////////////////////////
