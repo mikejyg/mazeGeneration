@@ -1,5 +1,3 @@
 #!/usr/bin/env bash
 
-. setClasspath.shrc
-
-java -cp $classpath mikejyg.mazeGeneration.MazeTest "$@"
+java -jar ../mazeGeneration.jar "$@"
